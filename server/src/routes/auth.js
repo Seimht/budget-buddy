@@ -1,6 +1,7 @@
 const express = require("express");
+const passport = require("passport");
+
 const router = express.Router();
-const passport = require("../../auth/google");
 
 
 router.get(
@@ -15,19 +16,15 @@ router.get(
     failureRedirect: "http://localhost:5173/login",
   }),
   (req, res) => {
-    
-    res.redirect("http://localhost:5173/");
+   
+    res.redirect("http://localhost:5173/dashboard");
   }
 );
 
-
-router.post("/logout", (req, res, next) => {
-  req.logout((err) => {
-    if (err) return next(err);
-    req.session.destroy(() => {
-      res.clearCookie("connect.sid");
-      res.json({ success: true });
-    });
+  
+router.get("/logout", (req, res) => {
+  req.logout(() => {
+    res.redirect("http://localhost:5173/login");
   });
 });
 
