@@ -4,7 +4,7 @@ const fetch = require("node-fetch");
 
 exports.getQuote = async (req, res) => {
   try {
-    // Use a reliable quote API
+    
     const response = await fetch("https://zenquotes.io/api/random");
 
     if (!response.ok) {

@@ -1,37 +1,30 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import { api } from '../api';
 
-const AuthCtx = createContext();
+import { createContext, useContext, useEffect, useState } from "react";
+import { api } from "../api";
+
+const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  async function refreshUser() {
-    try {
-      const res = await api('/api/auth/me');
-      setUser(res.user);
-    } catch {
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
-  }
+  const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    refreshUser();
+    api("/api/auth/me")
+      .then((data) => {
+      
+        setUser(data);
+      })
+      .catch((err) => {
+        console.error("Auth check error:", err);
+        setUser(null);
+      })
+      .finally(() => setChecking(false));
   }, []);
 
-  async function logout() {
-    await api('/auth/logout', { method: 'POST' });
-    setUser(null);
-  }
-
-  return (
-    <AuthCtx.Provider value={{ user, loading, logout, refreshUser }}>
-      {children}
-    </AuthCtx.Provider>
-  );
+  const value = { user, setUser, checking };
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-export const useAuth = () => useContext(AuthCtx);
+export function useAuth() {
+  return useContext(AuthContext);
+}

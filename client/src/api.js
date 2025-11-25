@@ -1,20 +1,25 @@
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5050';
 
-export async function api(path, { method = 'GET', body } = {}) {
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5050";
+
+export async function api(path, options = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
-    method,
-    headers: body ? { 'Content-Type': 'application/json' } : undefined,
-    body: body ? JSON.stringify(body) : undefined,
-    credentials: 'include' // send cookies 
+    credentials: "include", 
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    },
+    ...options,
   });
 
   if (!res.ok) {
-    let msg = 'Request failed';
-    try {
-      const j = await res.json();
-      msg = j.error || msg;
-    } catch {}
-    throw new Error(msg);
+    throw new Error(`API error: ${res.status}`);
   }
-  return res.json();
+
+  try {
+    return await res.json();
+  } catch {
+    return null;
+  }
 }
+
+export { API_BASE };
