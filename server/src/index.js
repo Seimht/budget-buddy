@@ -9,11 +9,11 @@ const apiAuthRoutes = require("./routes/apiAuth");
 const transactionRoutes = require("./routes/transactions");
 const quoteRoutes = require("./routes/quote");
 
-require("../auth/google"); // Google OAuth config
+require("../auth/google"); 
 
 const app = express();
 
-// ---------- MIDDLEWARE ----------
+// 
 app.use(
   cors({
     origin: "http://localhost:5173", // your Vite frontend
