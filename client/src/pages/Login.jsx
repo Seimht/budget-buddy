@@ -3,7 +3,8 @@ import { API_BASE } from "../api";
 export default function Login() {
   const handleGoogleLogin = () => {
    
-    window.location.href = `${API_BASE}/auth/google`;
+    const base = API_BASE.replace(/\/+$/, "");
+    window.location.href = `${base}/auth/google`;
   };
 
   return (
