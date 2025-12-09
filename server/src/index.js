@@ -53,7 +53,7 @@ app.use(passport.session());
 
 
 app.get("/", (req, res) => {
-  res.send("✅ Budget Buddy API is running");
+  res.send(" Budget Buddy API is running");
 });
 
 
