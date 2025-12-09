@@ -1,5 +1,3 @@
-
-
 # Budget Buddy
 
 ## Overview
@@ -86,10 +84,10 @@ GET /api/quote
 ## How It Works
 
 1. User logs in with Google
-2. User is taken to dashboard
+2. User is taken to the dashboard
 3. Transactions are fetched from PostgreSQL
 4. Monthly summary is generated from stored data
-5. When user adds a transaction, it is saved in the database and appears instantly on the UI
+5. When a user adds a transaction, it is saved in the database and appears instantly on the UI
 
 ---
 
@@ -98,7 +96,7 @@ GET /api/quote
 ### 1. Clone the repo
 
 ```bash
-git clone <https://github.com/Seimht/budget-buddy.git>
+git clone https://github.com/Seimht/budget-buddy.git
 cd budget-buddy
 ```
 
@@ -138,6 +136,3 @@ Successfully building and deploying a complete full-stack application with authe
 
 * Budgeting goals
 * Category breakdown charts
-  
-## Video link
- https://uncg-my.sharepoint.com/:v:/g/personal/sthabte_uncg_edu/IQB0OUNgR5WoSojrQKKkSteUAZyIskIcYCxiS9vE-FIMYro?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=TvAH64
