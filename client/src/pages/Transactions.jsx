@@ -1,4 +1,3 @@
-// client/src/pages/Transactions.jsx
 import { useEffect, useState } from "react";
 import { api } from "../api";
 import TransactionForm from "./components/TransactionForm.jsx";
@@ -7,86 +6,75 @@ import TransactionList from "./components/TransactionList.jsx";
 export default function Transactions() {
   const [transactions, setTransactions] = useState([]);
   const [selected, setSelected] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  // Load all transactions on mount
-  useEffect(() => {
-    loadTransactions();
-  }, []);
 
   async function loadTransactions() {
     try {
       const data = await api("/api/transactions");
       setTransactions(data);
     } catch (err) {
-      console.error("Error loading transactions:", err);
-    } finally {
-      setLoading(false);
+      console.error(err);
     }
   }
 
-  // When the form saves something (create or update)
-  function handleSaved(savedTx) {
-    setTransactions((prev) => {
-      const exists = prev.some((t) => t.id === savedTx.id);
-      if (exists) {
-        // UPDATE
-        return prev.map((t) => (t.id === savedTx.id ? savedTx : t));
-      } else {
-        // CREATE – add new at top
-        return [savedTx, ...prev];
-      }
-    });
-    setSelected(null); // clear selection after save
-  }
+  useEffect(() => {
+    loadTransactions();
+  }, []);
 
   function handleEdit(tx) {
     setSelected(tx);
-    // optional: scroll to top where the form is
-    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  async function handleDelete(id) {
-    const sure = window.confirm("Delete this transaction?");
-    if (!sure) return;
-
-    try {
-      await api(`/api/transactions/${id}`, {
-        method: "DELETE",
-      });
-      setTransactions((prev) => prev.filter((t) => t.id !== id));
-      if (selected && selected.id === id) {
-        setSelected(null);
-      }
-    } catch (err) {
-      console.error("Error deleting transaction:", err);
-      alert("Could not delete transaction.");
-    }
+  function handleSaved() {
+    setSelected(null);
+    loadTransactions();
   }
 
-  function handleCancelEdit() {
+  function handleCancel() {
     setSelected(null);
   }
 
   return (
-    <div style={{ display: "grid", gap: 16 }}>
-      <h2>Transactions</h2>
+    <div className="transactions-page">
+      <div className="transactions-header">
+        <div>
+          <h1 className="dashboard-title">Transactions</h1>
+          <p className="dashboard-subtitle">
+            Add, edit, and review your transaction history.
+          </p>
+        </div>
+      </div>
 
-      <TransactionForm
-        selected={selected}
-        onSaved={handleSaved}
-        onCancel={handleCancelEdit}
-      />
+      <div className="transactions-grid">
+        {/* Left: Form card */}
+        <section className="card transactions-card">
+          <h2 className="card-title">
+            {selected ? "Edit transaction" : "Add transaction"}
+          </h2>
+          <p className="card-caption">
+            Fill out the form below to record a new income or expense.
+          </p>
 
-      {loading ? (
-        <p>Loading transactions...</p>
-      ) : (
-        <TransactionList
-          transactions={transactions}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
-      )}
+          <TransactionForm
+            selected={selected}
+            onSaved={handleSaved}
+            onCancel={handleCancel}
+          />
+        </section>
+
+        {/* Right: Table card */}
+        <section className="card transactions-card">
+          <h2 className="card-title">History</h2>
+          <p className="card-caption">
+            Complete list of your stored transactions.
+          </p>
+
+          <TransactionList
+            transactions={transactions}
+            onEdit={handleEdit}
+            onChanged={loadTransactions}
+          />
+        </section>
+      </div>
     </div>
   );
 }
